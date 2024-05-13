@@ -75,7 +75,7 @@ jobs:
 
       - name: Format sql files
         id: formatting
-        if: steps.get_files_to_format.outcome == 'success'
+        if: steps.get_files_to_format.outputs.lintees != ''
         shell: bash -l {0}
         run: sqlfluff fix --config .sqlfluff ${{ steps.get_files_to_format.outputs.lintees }}
 
