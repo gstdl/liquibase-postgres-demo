@@ -29,6 +29,7 @@ jobs:
           FILTER_REGEX_INCLUDE: .*changelog/.*
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_SQLFLUFF: true
+          SQLFLUFF_CONFIG_FILE: .sqlfluff
           VALIDATE_XML: true
           VALIDATE_YAML: true
           # To report GitHub Actions status checks
