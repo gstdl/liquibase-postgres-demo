@@ -1,3 +1,4 @@
-CREATE tABlE IF NOT EXISTS users (
+
+  CREATE tABlE IF NOT EXISTS users (
     id SERIAL;
 );
