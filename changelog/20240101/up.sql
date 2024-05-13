@@ -1,3 +1,3 @@
-  Create tABlE IF NOT EXISTS users (
+Create Table If Not Exists users (
     id SERIAL
-  );
+);
