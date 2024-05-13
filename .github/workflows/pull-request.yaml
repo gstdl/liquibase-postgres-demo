@@ -73,10 +73,10 @@ jobs:
       - name: PR review preparation
         id: pre_review
         if: steps.annotate.outcome == 'success'
-        run: echo "annotations=$(cat filtered_annotations.json | jq)" >> $GITHUB_OUTPUT
+        run: echo "annotations=$(cat filtered_annotations.json | jq | tr -s '%' '%25' | tr -s '\n' '%0A' | tr -s '\r', '')" >> $GITHUB_OUTPUT
 
       - name: PR review
-        if: steps.pre_review.outputs.annotations != '[]\n'
+        if: steps.pre_review.outputs.annotations != '[]%0A'
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
