@@ -64,7 +64,7 @@ jobs:
         uses: yuzutech/annotations-action@v0.3.0
         if: steps.annotation_marking.outcome == 'success'
         with:
-          repo-token: "${{ secrets.BOT_PAT }}"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
           input: "./filtered_annotations.json"
       
@@ -79,7 +79,7 @@ jobs:
         run: |
           curl -L \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: Bearer ${{ secrets.BOT_PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -X POST \
             -d '{"commit_id": "{{ github.sha }}", "body": "SQL PARSING ERROR DETECTED! Please fix them.", "event":"REQUEST_CHANGES", "comments": ${{ steps.pre_review.outputs.comment }}' \
