@@ -72,7 +72,7 @@ jobs:
         id: pre_review
         if: steps.annotate.outcome == 'success'
         run: |
-          echo "comment=$(cat filtered_annotations.json | jq -r '.[] | {path: .file, position: .end_line, body: .message}' | jq -s | tr -d '\n')" >> $GITHUB_OUTPUT
+          echo "comment=$(cat filtered_annotations.json | jq -r '.[] | {path: .file, position: .end_line, body: .message}' | jq -s | tr -d '\n' | sed 's/'\''/'\''\\'\'''\''/g'" >> $GITHUB_OUTPUT
 
       - name: PR review
         if: steps.pre_review.outputs.comment != '[]'
