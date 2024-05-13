@@ -86,7 +86,7 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews
         
       - name: Cleanup files
-        id: steps.pre_review.outcome == 'success'
+        if: steps.pre_review.outcome == 'success'
         run: rm annotations.json filtered_annotations.json $HOME/files.txt
 
       - name: Format sql files
