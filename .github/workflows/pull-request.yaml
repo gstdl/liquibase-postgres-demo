@@ -49,27 +49,35 @@ jobs:
         shell: bash -l {0}
         run: sqlfluff lint --config .sqlfluff --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} > annotations.json
 
-      - name: Find files to fix and annotate
-        id: get_files_to_fix
+      - name: Mark files to annotate
+        id: annotation_marking
         if: steps.linting.outcome == 'success'
         shell: bash -l {0}
-        run: |
-          cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS")))' >> filtered_annotations.json
-          echo "lintees=$(cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS") | not))' | jq -r '.[] | .file')" >> $GITHUB_OUTPUT
+        run: cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS")))' >> filtered_annotations.json
+
+      - name: Get files to format
+        id: get_files_to_format
+        if: steps.linting.outcome == 'success'
+        shell: bash -l {0}
+        run: echo "lintees=$(cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS") | not))' | jq -r '.[] | .file')" >> $GITHUB_OUTPUT
 
       - name: Annotate
+        id: annotate
         uses: yuzutech/annotations-action@v0.3.0
-        if: steps.get_files_to_fix.outcome == 'success'
+        if: steps.annotation_marking.outcome == 'success'
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
           input: "./annotations.json"
+        
+      - name: Cleanup files
+        run: rm annotations.json filtered_annotations.json $HOME/files.txt
 
       - name: Format sql files
         id: formatting
-        if: steps.get_files_to_fix.outcome == 'success'
+        if: steps.get_files_to_format.outcome == 'success'
         shell: bash -l {0}
-        run: sqlfluff fix --config .sqlfluff ${{ steps.get_files_to_fix.outputs.lintees }} > annotations.json
+        run: sqlfluff fix --config .sqlfluff ${{ steps.get_files_to_format.outputs.lintees }} > annotations.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: steps.formatting.outcome == 'success'
