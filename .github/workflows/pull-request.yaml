@@ -64,7 +64,7 @@ jobs:
         uses: yuzutech/annotations-action@v0.3.0
         if: steps.annotation_marking.outcome == 'success'
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: "${{ secrets.BOT_PAT }}"
           title: "SQLFluff Lint"
           input: "./filtered_annotations.json"
       
