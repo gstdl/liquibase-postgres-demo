@@ -85,9 +85,9 @@ jobs:
             -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "SQL PARSING ERROR DETECTED! Please fix them.", "event":"REQUEST_CHANGES", "comments": ${{ steps.pre_review.outputs.comment }}' \
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews
         
-      # - name: Cleanup files
-      #   id: steps.pre_review.outcome == 'success'
-      #   run: rm annotations.json filtered_annotations.json $HOME/files.txt
+      - name: Cleanup files
+        id: steps.pre_review.outcome == 'success'
+        run: rm annotations.json filtered_annotations.json $HOME/files.txt
 
       - name: Format sql files
         id: formatting
