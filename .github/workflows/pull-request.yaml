@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       packages: read
       # To report GitHub Actions status checks
       statuses: write
@@ -59,7 +59,7 @@ jobs:
         id: get_files_to_format
         if: steps.linting.outcome == 'success'
         shell: bash -l {0}
-        run: echo "lintees=$(cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS") | not))' | jq -r '.[] | .file' | tr -s '\n' ' ')" >> $GITHUB_OUTPUT
+        run: echo "lintees=$(cat annotations.json | jq -c 'map(select(.message | startswith("TMP") or startswith("PRS") | not))' | jq -r '.[] | .file' | sort | uniq | awk '{seen[$0]++} END {for (line in seen) {print line; print line}}' | tr -s '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Annotate
         id: annotate
@@ -68,7 +68,7 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
-          input: "./annotations.json"
+          input: "./filtered_annotations.json"
         
       - name: Cleanup files
         run: rm annotations.json filtered_annotations.json $HOME/files.txt
