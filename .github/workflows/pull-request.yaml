@@ -66,7 +66,7 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
-          input: "./filtered_annotations.json"
+          input: "./annotations.json"
       
       - name: PR review preparation
         id: pre_review
@@ -107,6 +107,7 @@ jobs:
         run: sqlfluff fix --config .sqlfluff ${{ steps.get_files_to_format.outputs.lintees }}
 
       - uses: stefanzweifel/git-auto-commit-action@v5
+        id: auto-commit
         if: steps.formatting.outcome == 'success'
         with:
           commit_message: "auto-commit: sqlfluff (format sql)"
