@@ -1,3 +1,7 @@
-Create Table If Not Exists users (
-    id SERIAL
+CREATE TABLE IF NOT EXISTS USERS (
+    ID SERIAL
+);
+
+CREATE TABLE IF NOT EXISTS REGIONS (
+    ID SERIAL
 );
