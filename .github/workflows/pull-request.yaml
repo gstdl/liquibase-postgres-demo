@@ -93,7 +93,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.BOT_PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -X POST \
-            -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "LGTM! :+1:", "event":"APPROVE", "comments": ${{ steps.pre_review.outputs.comment }}' \
+            -d '{"commit_id": "${{ github.event.pull_request.head.sha }}", "body": "# SQLFluff\n\nLGTM! :+1:", "event":"APPROVE", "comments": ${{ steps.pre_review.outputs.comment }}' \
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews
         
       - name: Cleanup files
@@ -109,5 +109,5 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: steps.formatting.outcome == 'success'
         with:
-          commit_message: "auto-commit: format sql"
+          commit_message: "auto-commit: sqlfluff (format sql)"
           token: ${{ secrets.BOT_PAT }}
